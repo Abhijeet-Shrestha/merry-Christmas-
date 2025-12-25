@@ -1,8 +1,8 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 
-// Royalty-free Christmas music URLs
-const CHRISTMAS_MUSIC_URL = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
-const WIND_AMBIENCE_URL = 'https://cdn.pixabay.com/audio/2022/03/10/audio_c8c8a73467.mp3';
+// Reliable royalty-free Christmas music URLs
+const CHRISTMAS_MUSIC_URL = 'https://assets.mixkit.co/music/preview/mixkit-a-very-happy-christmas-897.mp3';
+const WIND_AMBIENCE_URL = 'https://assets.mixkit.co/sfx/preview/mixkit-blizzard-cold-wind-1153.mp3';
 
 export interface AudioControls {
   isMuted: boolean;
@@ -24,13 +24,25 @@ export function useAudio(): AudioControls {
 
   // Initialize audio elements
   useEffect(() => {
-    musicRef.current = new Audio(CHRISTMAS_MUSIC_URL);
-    musicRef.current.loop = true;
-    musicRef.current.volume = 0;
+    const music = new Audio();
+    music.crossOrigin = 'anonymous';
+    music.loop = true;
+    music.volume = 0;
+    music.preload = 'auto';
+    music.src = CHRISTMAS_MUSIC_URL;
+    musicRef.current = music;
     
-    ambienceRef.current = new Audio(WIND_AMBIENCE_URL);
-    ambienceRef.current.loop = true;
-    ambienceRef.current.volume = 0;
+    const ambience = new Audio();
+    ambience.crossOrigin = 'anonymous';
+    ambience.loop = true;
+    ambience.volume = 0;
+    ambience.preload = 'auto';
+    ambience.src = WIND_AMBIENCE_URL;
+    ambienceRef.current = ambience;
+
+    // Preload audio
+    music.load();
+    ambience.load();
 
     return () => {
       if (fadeIntervalRef.current) {
