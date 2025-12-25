@@ -34,7 +34,6 @@ const Index = () => {
     if (!animationState.started) return;
 
     const timeline = [
-      { time: 0, action: () => audio.startAudio() },
       { time: 3000, action: () => setAnimationState(s => ({ ...s, progress: 30 })) },
       { time: 6000, action: () => setAnimationState(s => ({ ...s, lightsOn: true })) },
       { time: 8000, action: () => setAnimationState(s => ({ ...s, showText: true })) },
@@ -63,6 +62,8 @@ const Index = () => {
   }, [animationState.started, audio]);
 
   const handleStart = useCallback(() => {
+    // Play audio as a direct result of user interaction to avoid autoplay blocking
+    audio.startAudio().catch(() => {});
     setAnimationState(s => ({ ...s, started: true }));
   }, []);
 
